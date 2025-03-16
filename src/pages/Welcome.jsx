@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom"
 import "../styles/Welcome.css"
 import logo from "../assets/images/logo.png"
+import Header from "../components/Header"
 
 function Welcome() {
     return (
