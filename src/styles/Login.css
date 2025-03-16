@@ -1,0 +1,395 @@
+.login-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.login-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 3rem;
+    max-width: 500px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+.login-logo {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+}
+
+.login-logo-image {
+    height: 60px;
+    width: auto;
+    object-fit: contain;
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.login-header h1 {
+    font-size: 2.2rem;
+    color: #2c3e50;
+    margin-bottom: 0.8rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    background: linear-gradient(135deg, #8a2be2 0%, #b45aeb 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.login-header p {
+    color: #7f8c8d;
+    font-size: 1.1rem;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.login-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.login-form-group label {
+    font-weight: 500;
+    color: #2c3e50;
+    font-size: 0.95rem;
+}
+
+.login-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.login-input-icon {
+    position: absolute;
+    left: 1rem;
+    color: #95a5a6;
+    font-size: 1.2rem;
+}
+
+.login-form-group input[type="email"],
+.login-form-group input[type="text"],
+.login-form-group input[type="password"] {
+    padding: 1rem 1rem 1rem 3rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    width: 100%;
+    background-color: #f9f9f9;
+}
+
+.login-form-group input:focus {
+    outline: none;
+    border-color: #b45aeb;
+    box-shadow: 0 0 0 3px #b45aeb3f;
+    background-color: white;
+}
+
+.login-form-group input::placeholder {
+    font-family: "Nunito Medium", sans-serif;
+    color: #bdc3c7;
+}
+
+.login-toggle-password {
+    position: absolute;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: #95a5a6;
+    cursor: pointer;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.login-toggle-password:hover {
+    color: #3498db;
+}
+
+.login-form-group input.login-error {
+    border-color: #e74c3c;
+    background-color: #fef2f2;
+}
+
+.login-error-message {
+    color: #e74c3c;
+    font-size: 0.85rem;
+    margin-top: 0.35rem;
+    display: flex;
+    align-items: center;
+}
+
+.login-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+.login-remember-me {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.login-remember-me input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.login-remember-label {
+    display: flex;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+    padding-left: 2rem;
+    font-size: 0.95rem;
+    color: #555;
+}
+
+.login-remember-checkbox {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    background-color: white;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-remember-checkbox-icon {
+    color: white;
+    font-size: 0.7rem;
+}
+
+input[type="checkbox"]:checked+.login-remember-label .login-remember-checkbox {
+    background-color: #8a2be2;
+    border-color: #8a2be2;
+}
+
+input[type="checkbox"]:focus+.login-remember-label .login-remember-checkbox {
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+.login-forgot-password {
+    color: #8a2be2;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+    position: relative;
+}
+
+.login-forgot-password::after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 1px;
+    bottom: -2px;
+    left: 0;
+    background-color: #8a2be2;
+    transition: width 0.3s ease;
+}
+
+.login-forgot-password:hover::after {
+    width: 100%;
+}
+
+/* Submit button styling */
+.login-button {
+    background: linear-gradient(135deg, #8a2be2 0%, #b45aeb 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 1.1rem;
+    font-family: "Nunito Medium", sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.login-button::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: all 0.6s ease;
+}
+
+.login-button:hover::before {
+    left: 100%;
+}
+
+.login-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(138, 43, 226, 0.3);
+}
+
+.login-button:active {
+    transform: translateY(-1px);
+}
+
+.login-button:disabled {
+    background: linear-gradient(135deg, #95a5a6 0%, #bdc3c7 100%);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.login-button-icon {
+    transition: transform 0.3s ease;
+}
+
+.login-button:hover .login-button-icon {
+    transform: translateX(3px);
+}
+
+/* Loading spinner */
+.login-spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Divider styling */
+.login-divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #7f8c8d;
+    font-size: 0.9rem;
+    margin: 1.5rem 0;
+}
+
+.login-divider::before,
+.login-divider::after {
+    content: "";
+    flex: 1;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.login-divider span {
+    padding: 0 1rem;
+    font-weight: 500;
+}
+
+/* Social login buttons */
+.social-login {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.social-login-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.9rem 0.5rem;
+    border-radius: 12px;
+    font-family: "Nunito Medium", sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid #e0e0e0;
+    background-color: white;
+    color: #333;
+}
+
+.social-login-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.social-login-button.google:hover {
+    border-color: #ea4335;
+    color: #ea4335;
+}
+
+.social-login-button.facebook:hover {
+    border-color: #1877f2;
+    color: #1877f2;
+}
+
+.social-login-button.apple:hover {
+    border-color: #000;
+    color: #000;
+}
+
+.social-login-button .login-social-icon {
+    font-size: 1.2rem;
+}
+
+.login-footer {
+    text-align: center;
+    margin-top: 2rem;
+    color: #7f8c8d;
+    font-size: 0.95rem;
+}
+
+.login-footer a {
+    color: #8a2be2;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s ease;
+    position: relative;
+    margin-left: 0.2rem;
+}
+
+.login-footer a::after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 1px;
+    bottom: -2px;
+    left: 0;
+    background-color: #8a2be2;
+    transition: width 0.3s ease;
+}
+
+.login-footer a:hover::after {
+    width: 100%;
+}
