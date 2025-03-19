@@ -1,15 +1,21 @@
+"use client"
+
 import { Link } from "react-router-dom"
 import "../styles/Welcome.css"
 import logo from "../assets/images/logo.png"
-import Header from "../components/Header"
 
 function Welcome() {
+
     return (
         <div className="welcome-container">
+            {/* Animated Background Elements */}
+            <div className="welcome-floating-orb welcome-orb-1"></div>
+            <div className="welcome-floating-orb welcome-orb-2"></div>
+
             {/* Header Section */}
             <div className="welcome-header">
                 <div className="welcome-header-logo-container">
-                    <img src={logo} alt="HealthUniverse Logo" className="welcome-header-logo-image" />
+                    <img src={logo || "/placeholder.svg"} alt="HealthUniverse Logo" className="welcome-header-logo-image" />
                 </div>
                 <h1 className="welcome-header-title">Welcome to HealthUniverse</h1>
                 <p className="welcome-header-subtitle">

@@ -1,68 +1,73 @@
-import React from 'react';
-import {
-  Navigate,
-  RouterProvider,
-  createBrowserRouter,
-} from 'react-router-dom';
+"use client"
 
-import AppLayout from "./pages/AppLayout";
+import { useEffect } from "react"
+import { Navigate, RouterProvider, createBrowserRouter } from "react-router-dom"
+import { useSelector } from "react-redux"
 
+import AppLayout from "./pages/AppLayout"
 
 // Pages
-import Welcome from './pages/Welcome';
-import SignUp from './pages/SignUp';
-import Login from './pages/Login';
-import Home from './pages/Home';
-import DietRegistryForms from './pages/DietRegistryForms';
-import UniverseChat from './pages/UniverseChat';
+import Welcome from "./pages/Welcome"
+import SignUp from "./pages/SignUp"
+import Login from "./pages/Login"
+import Home from "./pages/Home"
+import DietRegistryForms from "./pages/DietRegistryForms"
+import UniverseChat from "./pages/UniverseChat"
 
 // Fonts
-import './styles/fonts.css';
-import "./styles/variables.css"
-
+import "./styles/fonts.css"
 
 function App() {
+  const { darkMode } = useSelector((state) => state.theme)
+
+  // Apply dark mode class to html element
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add("dark")
+    } else {
+      document.documentElement.classList.remove("dark")
+    }
+  }, [darkMode])
 
   const router = createBrowserRouter([
     {
       path: "/",
-      element: (
-        <AppLayout />
-      ),
+      element: <AppLayout />,
       children: [
         {
-          path: '/',
+          path: "/",
           element: <Welcome />,
         },
         {
-          path: '/signUp',
+          path: "/signUp",
           element: <SignUp />,
         },
         {
-          path: '/login',
+          path: "/login",
           element: <Login />,
         },
         {
-          path: '/home',
+          path: "/home",
           element: <Home />,
         },
         {
-          path: '/dietRegistryForm',
+          path: "/dietRegistryForm",
           element: <DietRegistryForms />,
         },
         {
-          path: '/universeChat',
+          path: "/universeChat",
           element: <UniverseChat />,
         },
         {
-          path: '*',
+          path: "*",
           element: <Navigate to="/" />,
         },
       ],
     },
-  ]);
+  ])
 
-  return <RouterProvider router={router} />;
+  return <RouterProvider router={router} />
 }
 
-export default App;
+export default App
+
