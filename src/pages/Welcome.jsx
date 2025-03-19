@@ -23,7 +23,7 @@ function Welcome() {
                     success.
                 </p>
                 <div className="welcome-buttons">
-                    <Link to="/signup" className="welcome-button welcome-button-signup">
+                    <Link to="/register" className="welcome-button welcome-button-signup">
                         Get Started
                         <svg className="welcome-button-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path
