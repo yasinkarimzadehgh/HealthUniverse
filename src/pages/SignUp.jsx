@@ -1,39 +1,40 @@
-import { useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import { FiUser, FiMail, FiLock, FiEye, FiEyeOff, FiCheck, FiShield, FiAward, FiUsers, FiHeart } from "react-icons/fi"
-import { FaGoogle, FaFacebookF, FaApple } from "react-icons/fa"
-import logo from "../assets/images/logo.png"
-import "../styles/SignUp.css"
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { FiUser, FiMail, FiLock, FiEye, FiEyeOff, FiCheck, FiShield, FiAward, FiUsers, FiHeart } from "react-icons/fi";
+import { FaGoogle, FaFacebookF, FaApple } from "react-icons/fa";
+import axios from "axios";
+import logo from "../assets/images/logo.png";
+import "../styles/SignUp.css";
 
 function SignUp() {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         fullName: "",
         email: "",
         password: "",
         confirmPassword: "",
         agreeTerms: false,
-    })
-    const [errors, setErrors] = useState({})
-    const [isLoading, setIsLoading] = useState(false)
-    const [showPassword, setShowPassword] = useState(false)
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+    });
+    const [errors, setErrors] = useState({});
+    const [isLoading, setIsLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [passwordStrength, setPasswordStrength] = useState({
         score: 0,
         label: "",
-    })
-    const [step, setStep] = useState(1)
+    });
+    const [step, setStep] = useState(1);
 
     const handleChange = (e) => {
-        const { name, value, type, checked } = e.target
+        const { name, value, type, checked } = e.target;
         setFormData({
             ...formData,
             [name]: type === "checkbox" ? checked : value,
-        })
+        });
 
         // Check password strength if password field
         if (name === "password") {
-            checkPasswordStrength(value)
+            checkPasswordStrength(value);
         }
 
         // Clear error when user starts typing
@@ -41,121 +42,159 @@ function SignUp() {
             setErrors({
                 ...errors,
                 [name]: "",
-            })
+            });
         }
-    }
+    };
 
     const checkPasswordStrength = (password) => {
-        let score = 0
-        let label = ""
+        let score = 0;
+        let label = "";
 
         if (password.length > 0) {
             // Length check
-            if (password.length >= 8) score += 1
-            if (password.length >= 12) score += 1
+            if (password.length >= 8) score += 1;
+            if (password.length >= 12) score += 1;
 
             // Character variety checks
-            if (/[A-Z]/.test(password)) score += 1
-            if (/[a-z]/.test(password)) score += 1
-            if (/[0-9]/.test(password)) score += 1
-            if (/[^A-Za-z0-9]/.test(password)) score += 1
+            if (/[A-Z]/.test(password)) score += 1;
+            if (/[a-z]/.test(password)) score += 1;
+            if (/[0-9]/.test(password)) score += 1;
+            if (/[^A-Za-z0-9]/.test(password)) score += 1;
 
             // Set label based on score
-            if (score <= 2) label = "Weak"
-            else if (score <= 4) label = "Fair"
-            else if (score <= 5) label = "Good"
-            else label = "Strong"
+            if (score <= 2) label = "Weak";
+            else if (score <= 4) label = "Fair";
+            else if (score <= 5) label = "Good";
+            else label = "Strong";
         }
 
-        setPasswordStrength({ score, label })
-    }
+        setPasswordStrength({ score, label });
+    };
 
     const validateStep1 = () => {
-        const newErrors = {}
+        const newErrors = {};
 
         if (!formData.fullName.trim()) {
-            newErrors.fullName = "Full name is required"
+            newErrors.fullName = "Full name is required";
         }
 
         if (!formData.email.trim()) {
-            newErrors.email = "Email is required"
+            newErrors.email = "Email is required";
         } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-            newErrors.email = "Email is invalid"
+            newErrors.email = "Email is invalid";
         }
 
-        return newErrors
-    }
+        return newErrors;
+    };
 
     const validateStep2 = () => {
-        const newErrors = {}
+        const newErrors = {};
 
         if (!formData.password) {
-            newErrors.password = "Password is required"
+            newErrors.password = "Password is required";
         } else if (formData.password.length < 8) {
-            newErrors.password = "Password must be at least 8 characters"
+            newErrors.password = "Password must be at least 8 characters";
         }
 
         if (formData.password !== formData.confirmPassword) {
-            newErrors.confirmPassword = "Passwords do not match"
+            newErrors.confirmPassword = "Passwords do not match";
         }
 
         if (!formData.agreeTerms) {
-            newErrors.agreeTerms = "You must agree to the terms and conditions"
+            newErrors.agreeTerms = "You must agree to the terms and conditions";
         }
 
-        return newErrors
-    }
+        return newErrors;
+    };
 
     const handleNextStep = () => {
-        const validationErrors = validateStep1()
+        const validationErrors = validateStep1();
         if (Object.keys(validationErrors).length > 0) {
-            setErrors(validationErrors)
-            return
+            setErrors(validationErrors);
+            return;
         }
-        setStep(2)
-    }
+        setStep(2);
+    };
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
+    const handleSubmit = async (e) => {
+        e.preventDefault();
 
-        const validationErrors = validateStep2()
+        const validationErrors = validateStep2();
         if (Object.keys(validationErrors).length > 0) {
-            setErrors(validationErrors)
-            return
+            setErrors(validationErrors);
+            return;
         }
 
-        setIsLoading(true)
+        setIsLoading(true);
 
-        // Simulate API call
-        setTimeout(() => {
-            setIsLoading(false)
-            // Redirect to home page after successful signup
-            navigate("/home")
-        }, 1500)
-    }
+        try {
+            const requestData = {
+                fullName: formData.fullName,
+                emailAddress: formData.email,
+                password: formData.password,
+                confirmPassword: formData.confirmPassword,
+            };
+
+            // Make the API call to the register endpoint using the correct base URL
+            const response = await axios.post('http://85.208.253.76:7001/api/app/register', requestData, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            console.log('API Response:', response.data); // Log the response for debugging
+
+            // Check if the response includes a token
+            if (response.data.token) {
+                localStorage.setItem('token', response.data.token);
+                navigate('/home');
+            } else {
+                navigate('/login');
+            }
+
+            setIsLoading(false);
+        } catch (error) {
+            setIsLoading(false);
+            if (error.response) {
+                // Handle specific backend errors
+                const errorMessage = error.response.data.message || 'Registration failed. Please try again.';
+                if (errorMessage.toLowerCase().includes('email')) {
+                    setErrors({ ...errors, email: 'This email is already registered.' });
+                } else {
+                    setErrors({ ...errors, api: errorMessage });
+                }
+            } else if (error.request) {
+                // Handle network errors (e.g., CORS or server down)
+                setErrors({ ...errors, api: 'Cannot connect to the server. Please check your network or server status.' });
+            } else {
+                // Handle other errors
+                setErrors({ ...errors, api: 'An unexpected error occurred. Please try again.' });
+            }
+        }
+    };
 
     const togglePasswordVisibility = () => {
-        setShowPassword(!showPassword)
-    }
+        setShowPassword(!showPassword);
+    };
 
     const toggleConfirmPasswordVisibility = () => {
-        setShowConfirmPassword(!showConfirmPassword)
-    }
+        setShowConfirmPassword(!showConfirmPassword);
+    };
 
     const getStrengthColor = () => {
         switch (passwordStrength.label) {
             case "Weak":
-                return "var(--signup--strength-weak)"
+                return "var(--signup--strength-weak)";
             case "Fair":
-                return "var(--signup--strength-fair)"
+                return "var(--signup--strength-fair)";
             case "Good":
-                return "var(--signup--strength-good)"
+                return "var(--signup--strength-good)";
             case "Strong":
-                return "var(--signup--strength-strong)"
+                return "var(--signup--strength-strong)";
             default:
-                return "#e0e0e0"
+                return "#e0e0e0";
         }
-    }
+    };
 
     return (
         <div className="signup-container">
@@ -374,6 +413,9 @@ function SignUp() {
                             {errors.agreeTerms && <span className="signup-error-message signup-terms-error">{errors.agreeTerms}</span>}
                         </div>
 
+                        {/* Display API errors */}
+                        {errors.api && <span className="signup-error-message">{errors.api}</span>}
+
                         <div className="signup-buttons">
                             <button type="button" className="signup-back-button" onClick={() => setStep(1)}>
                                 Back
@@ -397,15 +439,15 @@ function SignUp() {
                 </div>
 
                 <div className="social-signup">
-                    <button type="button" className="social-signup-button google">
+                    <button type="button" className="social-signup-button google" disabled>
                         <FaGoogle className="signup-social-icon" />
                         <span>Google</span>
                     </button>
-                    <button type="button" className="social-signup-button facebook">
+                    <button type="button" className="social-signup-button facebook" disabled>
                         <FaFacebookF className="signup-social-icon" />
                         <span>Facebook</span>
                     </button>
-                    <button type="button" className="social-signup-button apple">
+                    <button type="button" className="social-signup-button apple" disabled>
                         <FaApple className="signup-social-icon" />
                         <span>Apple</span>
                     </button>
@@ -418,7 +460,7 @@ function SignUp() {
                 </div>
             </div>
         </div>
-    )
+    );
 }
 
-export default SignUp
+export default SignUp;
