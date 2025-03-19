@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import { FiMail, FiLock, FiEye, FiEyeOff, FiCheck, FiArrowRight } from "react-icons/fi"
+import { FiMail, FiLock, FiEye, FiEyeOff, FiCheck, FiArrowRight, FiShield, FiClock, FiSmartphone, FiGlobe } from "react-icons/fi"
 import { FaGoogle, FaFacebookF, FaApple } from "react-icons/fa"
 import logo from "../assets/images/logo.png"
 import "../styles/Login.css"
@@ -76,7 +76,7 @@ function Login() {
             <div className="login-card">
                 {/* Logo and Header */}
                 <div className="login-logo">
-                    <img src={logo} alt="HealthUniverse Logo" className="login-logo-image" />
+                    <img src={logo || "/placeholder.svg"} alt="HealthUniverse Logo" className="login-logo-image" />
                 </div>
 
                 <div className="login-header">
@@ -99,9 +99,10 @@ function Login() {
                                 onChange={handleChange}
                                 className={errors.email ? "login-error" : ""}
                                 placeholder="Enter your email"
+                                aria-describedby={errors.email ? "email-error" : undefined}
                             />
                         </div>
-                        {errors.email && <span className="login-error-message">{errors.email}</span>}
+                        {errors.email && <span id="email-error" className="login-error-message">{errors.email}</span>}
                     </div>
                     {/* Password */}
                     <div className="login-form-group">
@@ -116,6 +117,7 @@ function Login() {
                                 onChange={handleChange}
                                 className={errors.password ? "login-error" : ""}
                                 placeholder="Enter your password"
+                                aria-describedby={errors.password ? "password-error" : undefined}
                             />
                             <button
                                 type="button"
@@ -126,7 +128,7 @@ function Login() {
                                 {showPassword ? <FiEyeOff /> : <FiEye />}
                             </button>
                         </div>
-                        {errors.password && <span className="login-error-message">{errors.password}</span>}
+                        {errors.password && <span id="password-error" className="login-error-message">{errors.password}</span>}
                     </div>
 
                     <div className="login-options">
@@ -143,7 +145,7 @@ function Login() {
                                 Remember me
                             </label>
                         </div>
-                        <Link to="/" className="login-forgot-password">
+                        <Link to="/forgot-password" className="login-forgot-password">
                             Forgot Password?
                         </Link>
                     </div>
@@ -182,13 +184,13 @@ function Login() {
                     </button>
                 </div>
 
+
                 <div className="login-footer">
                     <p>
                         Don't have an account? <Link to="/signup">Sign Up</Link>
                     </p>
                 </div>
             </div>
-
         </div>
     )
 }

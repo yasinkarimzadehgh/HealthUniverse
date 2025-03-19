@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import { FiUser, FiMail, FiLock, FiEye, FiEyeOff, FiCheck } from "react-icons/fi"
+import { FiUser, FiMail, FiLock, FiEye, FiEyeOff, FiCheck, FiShield, FiAward, FiUsers, FiHeart } from "react-icons/fi"
 import { FaGoogle, FaFacebookF, FaApple } from "react-icons/fa"
 import logo from "../assets/images/logo.png"
 import "../styles/SignUp.css"
@@ -22,6 +22,7 @@ function SignUp() {
         score: 0,
         label: "",
     })
+    const [step, setStep] = useState(1)
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target
@@ -69,7 +70,7 @@ function SignUp() {
         setPasswordStrength({ score, label })
     }
 
-    const validateForm = () => {
+    const validateStep1 = () => {
         const newErrors = {}
 
         if (!formData.fullName.trim()) {
@@ -81,6 +82,12 @@ function SignUp() {
         } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
             newErrors.email = "Email is invalid"
         }
+
+        return newErrors
+    }
+
+    const validateStep2 = () => {
+        const newErrors = {}
 
         if (!formData.password) {
             newErrors.password = "Password is required"
@@ -99,10 +106,19 @@ function SignUp() {
         return newErrors
     }
 
+    const handleNextStep = () => {
+        const validationErrors = validateStep1()
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors)
+            return
+        }
+        setStep(2)
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault()
 
-        const validationErrors = validateForm()
+        const validationErrors = validateStep2()
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors)
             return
@@ -129,13 +145,13 @@ function SignUp() {
     const getStrengthColor = () => {
         switch (passwordStrength.label) {
             case "Weak":
-                return "#e74c3c"
+                return "var(--signup--strength-weak)"
             case "Fair":
-                return "#f39c12"
+                return "var(--signup--strength-fair)"
             case "Good":
-                return "#3498db"
+                return "var(--signup--strength-good)"
             case "Strong":
-                return "#2ecc71"
+                return "var(--signup--strength-strong)"
             default:
                 return "#e0e0e0"
         }
@@ -145,7 +161,7 @@ function SignUp() {
         <div className="signup-container">
             <div className="signup-card">
                 <div className="signup-logo">
-                    <img src={logo} alt="HealthUniverse Logo" className="signup-logo-image" />
+                    <img src={logo || "/placeholder.svg"} alt="HealthUniverse Logo" className="signup-logo-image" />
                 </div>
 
                 <div className="signup-header">
@@ -153,140 +169,228 @@ function SignUp() {
                     <p>Join HealthUniverse and start your wellness journey</p>
                 </div>
 
-                <form className="signup-form" onSubmit={handleSubmit}>
-                    <div className="signup-form-group">
-                        <label htmlFor="fullName">Full Name</label>
-                        <div className="signup-input-wrapper">
-                            <FiUser className="signup-input-icon" />
-                            <input
-                                type="text"
-                                id="fullName"
-                                name="fullName"
-                                value={formData.fullName}
-                                onChange={handleChange}
-                                className={errors.fullName ? "signup-error" : ""}
-                                placeholder="Enter your full name"
-                            />
-                        </div>
-                        {errors.fullName && <span className="signup-error-message">{errors.fullName}</span>}
+                <div className="signup-progress">
+                    <div className="signup-progress-step">
+                        <div className={`signup-progress-indicator ${step >= 1 ? 'active' : ''}`}>1</div>
+                        <span className="signup-progress-label">Account</span>
                     </div>
-
-                    <div className="signup-form-group">
-                        <label htmlFor="email">Email Address</label>
-                        <div className="signup-input-wrapper">
-                            <FiMail className="signup-input-icon" />
-                            <input
-                                type="email"
-                                id="email"
-                                name="email"
-                                value={formData.email}
-                                onChange={handleChange}
-                                className={errors.email ? "signup-error" : ""}
-                                placeholder="Enter your email"
-                            />
-                        </div>
-                        {errors.email && <span className="signup-error-message">{errors.email}</span>}
+                    <div className="signup-progress-line"></div>
+                    <div className="signup-progress-step">
+                        <div className={`signup-progress-indicator ${step >= 2 ? 'active' : ''}`}>2</div>
+                        <span className="signup-progress-label">Security</span>
                     </div>
+                </div>
 
-                    <div className="signup-form-group">
-                        <label htmlFor="password">Password</label>
-                        <div className="signup-input-wrapper">
-                            <FiLock className="signup-input-icon" />
-                            <input
-                                type={showPassword ? "text" : "password"}
-                                id="password"
-                                name="password"
-                                value={formData.password}
-                                onChange={handleChange}
-                                className={errors.password ? "signup-error" : ""}
-                                placeholder="Create a password"
-                            />
-                            <button
-                                type="button"
-                                className="signup-toggle-password"
-                                onClick={togglePasswordVisibility}
-                                aria-label={showPassword ? "Hide password" : "Show password"}
-                            >
-                                {showPassword ? <FiEyeOff /> : <FiEye />}
-                            </button>
+                {step === 1 ? (
+                    <form className="signup-form" onSubmit={(e) => { e.preventDefault(); handleNextStep(); }}>
+                        <div className="signup-form-group">
+                            <label htmlFor="fullName">Full Name</label>
+                            <div className="signup-input-wrapper">
+                                <FiUser className="signup-input-icon" />
+                                <input
+                                    type="text"
+                                    id="fullName"
+                                    name="fullName"
+                                    value={formData.fullName}
+                                    onChange={handleChange}
+                                    className={errors.fullName ? "signup-error" : ""}
+                                    placeholder="Enter your full name"
+                                    aria-describedby={errors.fullName ? "fullname-error" : undefined}
+                                />
+                            </div>
+                            {errors.fullName && <span id="fullname-error" className="signup-error-message">{errors.fullName}</span>}
                         </div>
-                        {errors.password ? (
-                            <span className="signup-error-message">{errors.password}</span>
-                        ) : (
-                            formData.password && (
-                                <div className="signup-password-strength">
-                                    <div className="signup-strength-bar">
-                                        <div
-                                            className="signup-strength-progress"
-                                            style={{
-                                                width: `${(passwordStrength.score / 6) * 100}%`,
-                                                backgroundColor: getStrengthColor(),
-                                            }}
-                                        ></div>
-                                    </div>
-                                    <span className="signup-strength-text" style={{ color: getStrengthColor() }}>
-                                        {passwordStrength.label}
-                                    </span>
+
+                        <div className="signup-form-group">
+                            <label htmlFor="email">Email Address</label>
+                            <div className="signup-input-wrapper">
+                                <FiMail className="signup-input-icon" />
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    className={errors.email ? "signup-error" : ""}
+                                    placeholder="Enter your email"
+                                    aria-describedby={errors.email ? "email-error" : undefined}
+                                />
+                            </div>
+                            {errors.email && <span id="email-error" className="signup-error-message">{errors.email}</span>}
+                        </div>
+
+                        <button type="submit" className="signup-button">
+                            Continue
+                        </button>
+
+                        <div className="signup-benefits">
+                            <h3 className="signup-benefits-title">Why join HealthUniverse?</h3>
+                            <div className="signup-benefit">
+                                <div className="signup-benefit-icon">
+                                    <FiHeart />
                                 </div>
-                            )
-                        )}
-                    </div>
+                                <div className="signup-benefit-content">
+                                    <h4 className="signup-benefit-title">Personalized Health Plans</h4>
+                                    <p className="signup-benefit-text">Get customized nutrition and fitness plans tailored to your goals</p>
+                                </div>
+                            </div>
+                            <div className="signup-benefit">
+                                <div className="signup-benefit-icon">
+                                    <FiUsers />
+                                </div>
+                                <div className="signup-benefit-content">
+                                    <h4 className="signup-benefit-title">Community Support</h4>
+                                    <p className="signup-benefit-text">Connect with like-minded individuals on their health journey</p>
+                                </div>
+                            </div>
+                            <div className="signup-benefit">
+                                <div className="signup-benefit-icon">
+                                    <FiAward />
+                                </div>
+                                <div className="signup-benefit-content">
+                                    <h4 className="signup-benefit-title">Expert Guidance</h4>
+                                    <p className="signup-benefit-text">Access to certified health professionals and nutritionists</p>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                ) : (
+                    <form className="signup-form" onSubmit={handleSubmit}>
+                        <div className="signup-form-group">
+                            <label htmlFor="password">Password</label>
+                            <div className="signup-input-wrapper">
+                                <FiLock className="signup-input-icon" />
+                                <input
+                                    type={showPassword ? "text" : "password"}
+                                    id="password"
+                                    name="password"
+                                    value={formData.password}
+                                    onChange={handleChange}
+                                    className={errors.password ? "signup-error" : ""}
+                                    placeholder="Create a password"
+                                    aria-describedby={errors.password ? "password-error" : undefined}
+                                />
+                                <button
+                                    type="button"
+                                    className="signup-toggle-password"
+                                    onClick={togglePasswordVisibility}
+                                    aria-label={showPassword ? "Hide password" : "Show password"}
+                                >
+                                    {showPassword ? <FiEyeOff /> : <FiEye />}
+                                </button>
+                            </div>
+                            {errors.password ? (
+                                <span id="password-error" className="signup-error-message">{errors.password}</span>
+                            ) : (
+                                formData.password && (
+                                    <div className="signup-password-strength">
+                                        <div className="signup-strength-bar">
+                                            <div
+                                                className="signup-strength-progress"
+                                                style={{
+                                                    width: `${(passwordStrength.score / 6) * 100}%`,
+                                                    backgroundColor: getStrengthColor(),
+                                                }}
+                                            ></div>
+                                        </div>
+                                        <span className="signup-strength-text" style={{ color: getStrengthColor() }}>
+                                            {passwordStrength.label}
+                                        </span>
+                                    </div>
+                                )
+                            )}
+                            {formData.password && !errors.password && (
+                                <div className="signup-password-tips">
+                                    <p className="signup-password-tip">
+                                        <span className={`signup-password-check ${formData.password.length >= 8 ? 'valid' : ''}`}>
+                                            {formData.password.length >= 8 ? <FiCheck /> : '•'}
+                                        </span>
+                                        At least 8 characters
+                                    </p>
+                                    <p className="signup-password-tip">
+                                        <span className={`signup-password-check ${/[A-Z]/.test(formData.password) ? 'valid' : ''}`}>
+                                            {/[A-Z]/.test(formData.password) ? <FiCheck /> : '•'}
+                                        </span>
+                                        At least one uppercase letter
+                                    </p>
+                                    <p className="signup-password-tip">
+                                        <span className={`signup-password-check ${/[0-9]/.test(formData.password) ? 'valid' : ''}`}>
+                                            {/[0-9]/.test(formData.password) ? <FiCheck /> : '•'}
+                                        </span>
+                                        At least one number
+                                    </p>
+                                    <p className="signup-password-tip">
+                                        <span className={`signup-password-check ${/[^A-Za-z0-9]/.test(formData.password) ? 'valid' : ''}`}>
+                                            {/[^A-Za-z0-9]/.test(formData.password) ? <FiCheck /> : '•'}
+                                        </span>
+                                        At least one special character
+                                    </p>
+                                </div>
+                            )}
+                        </div>
 
-                    <div className="signup-form-group">
-                        <label htmlFor="signup-confirmPassword">Confirm Password</label>
-                        <div className="signup-input-wrapper">
-                            <FiLock className="signup-input-icon" />
-                            <input
-                                type={showConfirmPassword ? "text" : "password"}
-                                id="confirmPassword"
-                                name="confirmPassword"
-                                value={formData.confirmPassword}
-                                onChange={handleChange}
-                                className={errors.confirmPassword ? "signup-error" : ""}
-                                placeholder="Confirm your password"
-                            />
-                            <button
-                                type="button"
-                                className="signup-toggle-password"
-                                onClick={toggleConfirmPasswordVisibility}
-                                aria-label={showConfirmPassword ? "Hide password" : "Show password"}
-                            >
-                                {showConfirmPassword ? <FiEyeOff /> : <FiEye />}
+                        <div className="signup-form-group">
+                            <label htmlFor="confirmPassword">Confirm Password</label>
+                            <div className="signup-input-wrapper">
+                                <FiLock className="signup-input-icon" />
+                                <input
+                                    type={showConfirmPassword ? "text" : "password"}
+                                    id="confirmPassword"
+                                    name="confirmPassword"
+                                    value={formData.confirmPassword}
+                                    onChange={handleChange}
+                                    className={errors.confirmPassword ? "signup-error" : ""}
+                                    placeholder="Confirm your password"
+                                    aria-describedby={errors.confirmPassword ? "confirm-password-error" : undefined}
+                                />
+                                <button
+                                    type="button"
+                                    className="signup-toggle-password"
+                                    onClick={toggleConfirmPasswordVisibility}
+                                    aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                                >
+                                    {showConfirmPassword ? <FiEyeOff /> : <FiEye />}
+                                </button>
+                            </div>
+                            {errors.confirmPassword && <span id="confirm-password-error" className="signup-error-message">{errors.confirmPassword}</span>}
+                        </div>
+
+                        <div className="signup-terms-group">
+                            <div className="signup-agreeTerms">
+                                <input
+                                    type="checkbox"
+                                    id="agreeTerms"
+                                    name="agreeTerms"
+                                    checked={formData.agreeTerms}
+                                    onChange={handleChange}
+                                />
+                                <label htmlFor="agreeTerms" className="signup-agreeTerms-label">
+                                    <span className="signup-agreeTerms-checkbox">
+                                        {formData.agreeTerms && <FiCheck className="signup-agreeTerms-checkbox-icon" />}
+                                    </span>
+                                    I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+                                </label>
+                            </div>
+                            {errors.agreeTerms && <span className="signup-error-message signup-terms-error">{errors.agreeTerms}</span>}
+                        </div>
+
+                        <div className="signup-buttons">
+                            <button type="button" className="signup-back-button" onClick={() => setStep(1)}>
+                                Back
+                            </button>
+                            <button type="submit" className="signup-button" disabled={isLoading}>
+                                {isLoading ? (
+                                    <>
+                                        <span className="signup-spinner"></span>
+                                        <span>Creating Account...</span>
+                                    </>
+                                ) : (
+                                    "Create Account"
+                                )}
                             </button>
                         </div>
-                        {errors.confirmPassword && <span className="signup-error-message">{errors.confirmPassword}</span>}
-                    </div>
-
-                    <div className="signup-terms-group">
-                        <div className="signup-agreeTerms">
-                            <input
-                                type="checkbox"
-                                id="agreeTerms"
-                                name="agreeTerms"
-                                checked={formData.agreeTerms}
-                                onChange={handleChange}
-                            />
-                            <label htmlFor="agreeTerms" className="signup-agreeTerms-label">
-                                <span className="signup-agreeTerms-checkbox">{formData.agreeTerms && <FiCheck className="signup-agreeTerms-checkbox-icon" />}</span>I
-                                agree to the&nbsp;
-                                <a href="#">Terms of Service</a>&nbsp;and&nbsp;
-                                <a href="#">Privacy Policy</a>
-                            </label>
-                        </div>
-                        {errors.agreeTerms && <span className="signup-error-message signup-terms-error">{errors.agreeTerms}</span>}
-                    </div>
-
-                    <button type="submit" className="signup-button" disabled={isLoading}>
-                        {isLoading ? (
-                            <>
-                                <span className="signup-spinner"></span>
-                                <span>Creating Account...</span>
-                            </>
-                        ) : (
-                            "Create Account"
-                        )}
-                    </button>
-                </form>
+                    </form>
+                )}
 
                 <div className="signup-divider">
                     <span>Or sign up with</span>
